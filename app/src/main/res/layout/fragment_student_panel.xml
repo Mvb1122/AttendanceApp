@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alignment_layout_2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00FFFFFF"
+    android:scaleType="centerInside">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/alignment_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="11dp"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toTopOf="@+id/background">
+
+        <TextView
+            android:id="@+id/Name_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:elevation="11dp"
+            android:fontFamily="sans-serif"
+            android:text="STUDENT_NAME"
+            android:textColor="#000000"
+            android:textSize="14pt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/Period_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="PERIOD_NUMBER"
+            android:textColor="#232323"
+            android:textSize="7pt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/Name_Display"
+            app:layout_constraintTop_toBottomOf="@+id/Name_Display"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/Attendance_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="ATTENDANCE"
+            android:textColor="#232323"
+            android:textSize="7pt"
+            app:layout_constraintEnd_toEndOf="@+id/Name_Display"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/Period_Display"
+            app:layout_constraintTop_toTopOf="@+id/Period_Display" />
+
+        <TextView
+            android:id="@+id/ID_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="STUDENT_ID"
+            android:textColor="#232323"
+            android:textSize="7pt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/Period_Display"
+            app:layout_constraintTop_toBottomOf="@+id/Period_Display"
+            app:layout_constraintVertical_bias="0.1" />
+
+        <TextView
+            android:id="@+id/Teacher_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TEACHER_NAME"
+            android:textColor="#232323"
+            android:textSize="7pt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ID_Display"
+            app:layout_constraintTop_toBottomOf="@+id/ID_Display"
+            app:layout_constraintVertical_bias="0.1" />
+
+        <ImageView
+            android:id="@+id/Attendance_Image_Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@android:string/fingerprint_icon_content_description"
+            android:elevation="12dp"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="@+id/Name_Display"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Name_Display"
+            app:layout_constraintTop_toTopOf="@+id/Name_Display"
+            app:srcCompat="@drawable/check_mark" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/background_for_the_design"
+        android:elevation="10dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/rounded_rectangle"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
