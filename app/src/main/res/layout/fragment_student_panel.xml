@@ -5,15 +5,16 @@
     android:id="@+id/alignment_layout_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00FFFFFF"
     android:scaleType="centerInside">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/alignment_layout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:elevation="11dp"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
         app:layout_constraintBottom_toBottomOf="@+id/background"
         app:layout_constraintEnd_toEndOf="@+id/background"
         app:layout_constraintStart_toStartOf="@+id/background"
@@ -24,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
             android:elevation="11dp"
             android:fontFamily="sans-serif"
             android:text="STUDENT_NAME"
@@ -103,11 +103,12 @@
     <ImageButton
         android:id="@+id/background"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/background_for_the_design"
         android:elevation="10dp"
-        android:scaleType="fitStart"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

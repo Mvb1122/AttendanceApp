@@ -48,23 +48,28 @@ public class AttendanceManager {
     public AttendanceManager(CSVReader.CVS c) {
         // Create Student objects from the CSV data.
         String[][] data = c.data;
-        list = new Student[data.length - 1]; // The first row usually contains list information.
-        for (int i = 0; i < data[0].length; i++) {
+        list = new Student[data.length];
+        // The first row usually contains list information, so I set the start for the list to be 1 and the length to be equal to the data's length.
+        // TODO: Correct this memory inference.
+        for (int i = 1; i != data.length; i++) {
             list[i] = new Student(c.get(SettingsManager.ID_COLUMN, i));
             list[i].manager = this;
 
             // Add each Student's actual name and period number.
             list[i].studentName = c.get(SettingsManager.NAME_COLUMN, i);
-            try {
-                list[i].periodNumber = Integer.parseInt(c.get(SettingsManager.PERIOD_COLUMN, i));
-            } catch (NumberFormatException e) {
-                // TODO: Fix this.
-                list[i].periodNumber = 2;
-            }
+
+            list[i].periodNumber = Integer.parseInt(c.get(SettingsManager.PERIOD_COLUMN, i));
         }
 
         // Bind teacher to class.
         teacher = c.get(SettingsManager.TEACHER_COLUMN, 2);
+
+        // Validate data.
+        for (int i = 1; i < list.length; i++) {
+            if (list[i] == null) {
+                System.out.printf("Student #%s is null.", i);
+            }
+        }
     }
 
     public Student[] getList() {return list;}

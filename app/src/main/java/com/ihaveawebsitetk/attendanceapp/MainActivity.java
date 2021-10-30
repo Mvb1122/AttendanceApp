@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 import utils.AttendanceManager;
 import utils.CSVReader;
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
             opener.start();
         });
 
+        // TODO: Remove QR Scanning testing code and asset.
         try {
-            // File file = new File(getApplicationContext().getFilesDir() + "/src/main/res/drawable/qrtest.png");
             String decodedText = QRReader.decodeQRCode(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.qrtest));
             if (decodedText == null) {
                 System.out.println("No QR Code found in the image");
@@ -92,34 +93,40 @@ public class MainActivity extends AppCompatActivity {
                 requestPermission();
             }
         });
+
+        // Update the scrollview when the app is loaded.
+        updateScrollView();
     }
 
     private void updateScrollView() {
-        // Generate StudentCard objects.
-        StudentCard[] students = new StudentCard[manager.getList().length];
-        for (int i = 0; i < students.length; i++) {
-            students[i] = new StudentCard(manager.getList()[i]);
-        }
-
-        // Add cards to display.
-        runOnUiThread(() -> {
-            // First, delete the reminder that tells the user to load CSV data.
-            TextView loadingReminder = findViewById(R.id.LoadingReminder);
-            loadingReminder.setVisibility(GONE);
-
-            // Add each view to the scrollview.
-            LinearLayout l = findViewById(R.id.StudentScrollView);
-
-            int i = 0;
-            for (StudentCard c : students) {
-                if (manager.getList()[i] != null) {
-                    FragmentTransaction fm3t = getSupportFragmentManager().beginTransaction();
-                    fm3t.add(R.id.StudentScrollView, c, "fragment_" + i);
-                    fm3t.commit();
-                    i++;
-                }
+        if (manager != null) {
+            // Make a copy of the student list.
+            AttendanceManager.Student[] list = new AttendanceManager.Student[manager.getList().length];
+            System.arraycopy(manager.getList(), 0, list, 0, manager.getList().length);
+            // Generate StudentCard objects.
+            StudentCard[] students = new StudentCard[list.length];
+            for (int i = 1; i < students.length; i++) {
+                students[i] = new StudentCard(list[i]);
             }
-        });
+
+            // Add cards to display.
+            runOnUiThread(() -> {
+                // First, delete the reminder that tells the user to load CSV data.
+                TextView loadingReminder = findViewById(R.id.LoadingReminder);
+                loadingReminder.setVisibility(GONE);
+            });
+
+            // Add the views to the scroller from another thread.
+            Thread scroller = new Thread(() -> {
+                // Add each view to the scrollview.
+                for (int i = 1; i != students.length; i++) {
+                    FragmentTransaction fm3t = getSupportFragmentManager().beginTransaction();
+                    fm3t.add(R.id.StudentScrollView, students[i], "fragment_" + i);
+                    fm3t.commit();
+                }
+            });
+            scroller.start();
+        }
     }
 
     private Intent openFile(Uri basis, String mime) {

@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.ihaveawebsitetk.attendanceapp.databinding.FragmentStudentPanelBinding;
 
+import java.util.Locale;
+
 import utils.AttendanceManager;
 
 public class StudentCard extends Fragment {
@@ -30,20 +32,23 @@ public class StudentCard extends Fragment {
         TextView teacherName = b.TeacherDisplay;
         ImageView attendanceIcon = b.AttendanceImageDisplay;
 
-        // Apply text where it's not null.
-        if (s.studentName != null) {
-            name.setText(s.studentName);
-        }
+        // Apply text.
+        name.setText(s.studentName);
 
-        if (s.periodNumber != -1) {
-            periodNumber.setText(numberToPronunciation(s.periodNumber));
-        }
+        String attendanceText = numberToPronunciation(s.periodNumber) + " period";
+        // Capitalize first letter.
+        attendanceText = ("" + attendanceText.charAt(0)).toUpperCase(Locale.ROOT) + attendanceText.substring(1);
+        periodNumber.setText(attendanceText);
+
 
         attendance.setText(s.getAttendance());
 
         id.setText(String.valueOf(s.id));
 
-        teacherName.setText(s.getManager().getTeacher());
+        {
+            String input = "Teacher: " + s.getManager().getTeacher();
+            teacherName.setText(input);
+        }
 
         attendanceIcon.setImageBitmap(s.getAttendanceIcon());
 
