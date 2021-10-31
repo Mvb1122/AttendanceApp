@@ -4,5 +4,5 @@
     <string name="open_camera_button_text">Open Camera</string>
     <string name="load_csv_button_text">Load CSV</string>
     <string name="save_csv">Save CSV</string>
-    <string name="load_CSV_reminder">Hit the Load CSVbutton below.</string>
+    <string name="load_CSV_reminder">Hit the "Load CSV" button below.</string>
 </resources>
