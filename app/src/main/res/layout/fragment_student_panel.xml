@@ -27,6 +27,7 @@
             android:layout_marginStart="32dp"
             android:elevation="11dp"
             android:fontFamily="sans-serif"
+            android:paddingRight="32dp"
             android:text="STUDENT_NAME"
             android:textColor="#000000"
             android:textSize="14pt"
@@ -88,14 +89,14 @@
         <ImageView
             android:id="@+id/Attendance_Image_Display"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
             android:contentDescription="@android:string/fingerprint_icon_content_description"
-            android:elevation="12dp"
-            android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="@+id/Name_Display"
+            android:elevation="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/Teacher_Display"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/Name_Display"
-            app:layout_constraintTop_toTopOf="@+id/Name_Display"
+            app:layout_constraintStart_toEndOf="@+id/Attendance_Display"
+            app:layout_constraintTop_toTopOf="@+id/Attendance_Display"
             app:srcCompat="@drawable/check_mark" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.ihaveawebsitetk.attendanceapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.ihaveawebsitetk.attendanceapp.databinding.FragmentStudentPanelBinding;
 
@@ -43,7 +41,10 @@ public class StudentCard extends Fragment {
 
         attendance.setText(s.getAttendance());
 
-        id.setText(String.valueOf(s.id));
+        {
+            String input = "ID: " + s.id;
+            id.setText(input);
+        }
 
         {
             String input = "Teacher: " + s.getManager().getTeacher();

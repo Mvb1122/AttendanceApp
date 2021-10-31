@@ -6,9 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class AttendanceManager {
+    CSVReader.CVS csv;
     Student[] list;
     String teacher;
 
@@ -24,16 +26,17 @@ public class AttendanceManager {
      */
     public boolean markAttending(String id) {
         // Loop through the list of students and find the one who matches the id.
-        for (Student student : list) {
+        for (int i = 1; i < list.length; i++) {
+            Student student = list[i];
             if (student.id.equals(id)) {
-                // If that student was already marked as attending, return false.
+                // If that student was already marked as attending, return true.
                 if (student.attending) {
-                    return false;
+                    return true;
                 }
 
-                // Else, set the student to be attending and return true.
+                // Else, set the student to be attending and return false.
                 student.setAttending(true);
-                return true;
+                return false;
             }
         }
         return false;
@@ -47,10 +50,11 @@ public class AttendanceManager {
      */
     public AttendanceManager(CSVReader.CVS c) {
         // Create Student objects from the CSV data.
+        csv = c;
         String[][] data = c.data;
         list = new Student[data.length];
         // The first row usually contains list information, so I set the start for the list to be 1 and the length to be equal to the data's length.
-        // TODO: Correct this memory inference.
+        // TODO: Correct this memory inefficiency.
         for (int i = 1; i != data.length; i++) {
             list[i] = new Student(c.get(SettingsManager.ID_COLUMN, i));
             list[i].manager = this;
@@ -70,6 +74,34 @@ public class AttendanceManager {
                 System.out.printf("Student #%s is null.", i);
             }
         }
+    }
+
+    /**
+     * Dumps the entire list of scanned students to a string.
+     * @return The data, in CSV format.
+     * @implNote The AttendanceManager that this is called on <strong>MUST</strong> be created via CSV.
+     * If you call this on an AttendanceManager with null csv, it returns null.
+     */
+    public String dump() {
+        if (csv != null) {
+            String output = CSVRowToString(csv.data[0]) + ", \"Attending\", \"Timestamp\"\n";
+            // Loop through rows on the CSV data.
+            for (int i = 1; i < csv.data.length; i++) {
+                output += CSVRowToString(csv.data[i]) + ", \"" + list[i].attending + "\", \"" + list[i].timestamp + "\"\n";
+            }
+            return output;
+        } else return null;
+    }
+
+    private String CSVRowToString(String[] d) {
+        String output = "";
+        for (int i = 0; i < d.length - 1; i++) {
+            output += "\"" + d[i] + "\", ";
+        }
+
+        output += "\"" + d[d.length - 1] + "\"";
+
+        return output;
     }
 
     public Student[] getList() {return list;}
