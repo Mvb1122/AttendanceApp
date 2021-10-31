@@ -4,26 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -57,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         loadCSVButton.setOnClickListener(view -> {
             Thread opener = new Thread(() -> {
                 lastRunIntentsGoal = "load";
-                Intent i = openFile(getReferrer(), "text/csv");
+                Intent i = openFile(getReferrer());
                 // Wait until the user has returned to the app.
                 try {
                     Thread.sleep(100);
@@ -161,10 +156,12 @@ public class MainActivity extends AppCompatActivity {
         return intent;
     }
 
-    private Intent openFile(Uri basis, String mime) {
+    private Intent openFile(Uri basis) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         // intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType(mime);
+
+        // Set it to be able to open any kind of text file.
+        intent.setType("text/*");
 
         // Optionally, specify a URI for the file that should appear in the
         // system file picker when it loads.

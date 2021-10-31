@@ -66,7 +66,7 @@ public class AttendanceManager {
         }
 
         // Bind teacher to class.
-        teacher = c.get(SettingsManager.TEACHER_COLUMN, 2);
+        teacher = c.get(SettingsManager.TEACHER_COLUMN, 1);
 
         // Validate data.
         for (int i = 1; i < list.length; i++) {

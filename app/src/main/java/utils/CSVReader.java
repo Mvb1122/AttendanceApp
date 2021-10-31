@@ -49,11 +49,14 @@ public class CSVReader {
             }
         }
 
+        // Add the rest of the line, since it has the rest of the data.
+            // Yes this is part of a patch.
+        if (input.length() != 0) lines.add(input);
+
         // Create an ArrayList to hold the outputted data.
         ArrayList[] output = new ArrayList[lines.size()];
         // Go through each Line, then add underscores before any commas which are after an odd number of quotes.
         for (int i = 0; i < lines.size(); i++) {
-            int numQuotes = 0;
             String line = lines.get(i);
             // Remove the \r at the end of the line, if there is one.
             if (line.endsWith("\r")) line = line.substring(0, line.length() - 1);
@@ -62,8 +65,11 @@ public class CSVReader {
             output[i] = new ArrayList<String>(1);
             // Parse the line into the output array.
                 // Split by "*," where * != "_" by looping until there is no line left.
-                    // Navigate to the first comma, then see if the previous character is an underscore.
+                    // Navigate to the first comma, then see if the previous character wasn't an underscore or it's in an odd quote..
+            int numQuotes = 0;
             for (int j = 0; j < line.length(); j++) {
+                if (line.charAt(j) == '"') numQuotes++;
+
                 char prevChar;
                 try {
                     prevChar = line.charAt(j - 1);
@@ -71,7 +77,7 @@ public class CSVReader {
                     prevChar = (char) 0;
                 }
 
-                if (line.charAt(j) == ',' && prevChar == '"') {
+                if (line.charAt(j) == ',' && (prevChar == '"' || numQuotes % 2 != 1)) {
                     // If only the first conditional was true, push from j to the next comma. If the character being inspected is the first comma, then push from 0 to j.
                         // Note that we don't require an if-statement here, since I used continue; on line 245.
 
@@ -162,7 +168,7 @@ public class CSVReader {
         public String get(String name, int row) {
             int index = indexOf(name);
             if (index != -1) {
-                // System.out.println("Of: " + arrayToString(data[index]) + "\nAt: " + index);
+                // System.out.println("Of: " + arrayToString(data[row]) + "\nAt: " + index);
                 return data[row][index];
             } else {
                 return null;
