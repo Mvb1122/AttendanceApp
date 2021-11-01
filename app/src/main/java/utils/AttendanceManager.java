@@ -21,25 +21,27 @@ public class AttendanceManager {
     /**
      * Marks a student as present.
      * @param id The Student-ID of the selected student.
-     * @return True if the student was found, false if they were not found or if they
-     * were already marked as attending.
+     * @return 0 if the student was found and marked attending, 1 if they were found
+     * but already attending, and 2 if they weren't found.
      */
-    public boolean markAttending(String id) {
+    public int markAttending(String id) {
         // Loop through the list of students and find the one who matches the id.
         for (int i = 1; i < list.length; i++) {
             Student student = list[i];
             if (student.id.equals(id)) {
-                // If that student was already marked as attending, return true.
+                // If that student was already marked as attending, return 1.
                 if (student.attending) {
-                    return true;
+                    return 1;
                 }
 
-                // Else, set the student to be attending and return false.
+                // Else, set the student to be attending and return 0.
                 student.setAttending(true);
-                return false;
+                return 0;
             }
         }
-        return false;
+
+        // If the student wasn't found, return 2.
+        return 2;
     }
 
 
@@ -62,11 +64,15 @@ public class AttendanceManager {
             // Add each Student's actual name and period number.
             list[i].studentName = c.get(SettingsManager.NAME_COLUMN, i);
 
-            list[i].periodNumber = Integer.parseInt(c.get(SettingsManager.PERIOD_COLUMN, i));
+            list[i].periodNumber = Integer.parseInt(c.get(SettingsManager.PERIOD_COLUMN, i).trim());
         }
 
         // Bind teacher to class.
-        teacher = c.get(SettingsManager.TEACHER_COLUMN, 1);
+        if (c.get(SettingsManager.TEACHER_COLUMN, 1) != null) {
+            teacher = c.get(SettingsManager.TEACHER_COLUMN, 1);
+        } else {
+            teacher = SettingsManager.TEACHER_COLUMN;
+        }
 
         // Validate data.
         for (int i = 1; i < list.length; i++) {
@@ -141,6 +147,18 @@ public class AttendanceManager {
         return teacher;
     }
 
+    public void addStudent(Student s) {
+        // Add a student to the list.
+            // Create a copy of the old array.
+        Student[] oldList = list;
+            // Extend List.
+        list = new Student[list.length];
+        for (int i = 0; i < oldList.length; i++) {
+            list[i] = oldList[i];
+        }
+        list[list.length - 1] = s;
+    }
+
     public static class Student {
         /*
         name: The Student's ID.
@@ -189,7 +207,8 @@ public class AttendanceManager {
             }
         }
 
-        public AttendanceManager getManager() {return manager; }
+        public AttendanceManager getManager() { return manager; }
+        public void setManager(AttendanceManager m) { manager = m; }
 
         public Bitmap getAttendanceIcon() {
             if (tardy || attending) {

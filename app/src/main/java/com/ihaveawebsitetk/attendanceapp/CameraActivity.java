@@ -20,6 +20,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
 
+import utils.AttendanceManager;
+import utils.CSVReader;
 import utils.QRReader;
 
 public class CameraActivity extends AppCompatActivity {
@@ -48,7 +50,9 @@ public class CameraActivity extends AppCompatActivity {
             boolean bitmapAvailable = false;
             // Sleep until the camera turns on.
             do {
-                bitmapAvailable = previewView.getBitmap() != null;
+                try {
+                    bitmapAvailable = previewView.getBitmap() != null;
+                } catch (IllegalArgumentException e) { ; } // Do nothing.
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -65,14 +69,25 @@ public class CameraActivity extends AppCompatActivity {
                     String output = QRReader.decodeQRCode(b);
 
                     // Code to run if a QR code is scanned:
-                    if (output != null && !output.equals(" ") && MainActivity.manager != null) {
+                    if (output != null && !output.equals(" ")) {
                         System.out.printf("Scanned text: %s, Scan number: %s%n", output, successfulScanNumber);
 
-                        // Mark the student as attending in the AttendanceManager.
-                        boolean alreadyScanned = MainActivity.manager.markAttending(output);
+                        int alreadyScanned;
+                        try {
+                            // Mark the student as attending in the AttendanceManager.
+                            try {
+                                alreadyScanned = MainActivity.manager.markAttending(output);
+                            } catch (NumberFormatException e) {
+                                // TODO: Write code to tell the user that the code scanned was not a valid StudentID.
+                                alreadyScanned = 1;
+                            }
+                        } catch (NullPointerException e) {
+                            // If the manager is null, create a blank CSV and use that to set it.
+                            alreadyScanned = 2;
+                        }
 
                         // If the student wasn't already scanned, create a card and show it on screen.
-                        if (!alreadyScanned) {
+                        if (alreadyScanned == 0) {
                             // Create the scanning card:
                             ScanningCard c = new ScanningCard(output);
 
@@ -83,6 +98,33 @@ public class CameraActivity extends AppCompatActivity {
                             successfulScanNumber++;
                         }
 
+                        // If the student wasn't found, add them to the manager's list and mark them as scanned.
+                        if (alreadyScanned == 2) {
+                                // Code to run if this is the first student scanned, and there's no manager loaded.
+                            if (MainActivity.manager == null) {
+                                String blankCSV = "\"Year\",\"Organization\",\"Period Begin\",\"Student Name\",\"Sis Number\",\"Section ID\",\"Grade\",\"Teacher Name\"\n"
+                                                + "\"\", \"\", \"0\",\"" + output + "\", \"" + output +"\", \"\", \"\", \"\"";
+                                MainActivity.manager = new AttendanceManager(new CSVReader.CVS(blankCSV));
+                            }
+
+                            // If this is a new Student, but it's not the first, create it and add it to the list.
+                            AttendanceManager.Student newStudent = new AttendanceManager.Student(output);
+
+                            // Set values so that the app doesn't crash.
+                            newStudent.studentName = "Scanned Student #" + output;
+                            newStudent.periodNumber = 0;
+                            newStudent.setManager(MainActivity.manager);
+
+                            MainActivity.manager.addStudent(newStudent);
+                            MainActivity.manager.markAttending(output);
+
+                            // Do the same stuff as in a normal scan.
+                            ScanningCard c = new ScanningCard(output);
+                            FragmentTransaction fm3t = getSupportFragmentManager().beginTransaction();
+                            fm3t.add(R.id.scanningCardScrollView, c, "Scanning_Fragment_" + successfulScanNumber);
+                            fm3t.commit();
+                            successfulScanNumber++;
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
